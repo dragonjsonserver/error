@@ -1,0 +1,88 @@
+<?php
+/**
+ * @link http://dragonjsonserver.de/
+ * @copyright Copyright (c) 2012-2014 DragonProjects (http://dragonprojects.de/)
+ * @license http://license.dragonprojects.de/dragonjsonserver.txt New BSD License
+ * @author Christoph Herrmann <developer@dragonprojects.de>
+ * @package DragonJsonServerError
+ */
+?>
+<h1>Error</h1>
+<h2><?= $this->escapeHtml($this->message) ?></h2>
+<h2>Details:</h2>
+<table>
+    <?php if (isset($this->reason) && $this->reason) { ?>
+        <tr>
+            <th>Reason:</th>
+            <td><?= $this->escapeHtml($this->reason) ?></td>
+        </tr>
+    <?php } ?>
+    <?php if (isset($this->controller) && $this->controller) { ?>
+        <tr>
+            <th>Controller:</th>
+            <td><?= $this->escapeHtml($this->controller) ?></td>
+        </tr>
+    <?php } ?>
+    <?php if (isset($this->controller_class) && $this->controller_class && $this->controller_class != $this->controller) { ?>
+        <tr>
+            <th>Controller Class:</th>
+            <td><?= $this->escapeHtml($this->controller_class) ?></td>
+        </tr>
+    <?php } ?>
+</table>
+<?php if (isset($this->display_exceptions) && $this->display_exceptions) { ?>
+    <h2>Exception:</h2>
+    <?php if (isset($this->exception) && $this->exception instanceof Exception) { ?>
+        <table>
+            <tr>
+                <th>Class:</th>
+                <td><?= get_class($this->exception) ?></td>
+            </tr>
+            <tr>
+                <th>File:</th>
+                <td><?= $this->exception->getFile() ?>:<?= $this->exception->getLine() ?></td>
+            </tr>
+            <tr>
+                <th>Message:</th>
+                <td><?= $this->exception->getMessage() ?></td>
+            </tr>
+            <tr>
+                <th>Stack trace:</th>
+                <td><pre><?= $this->exception->getTraceAsString() ?></pre></td>
+            </tr>
+        </table>
+        <?php
+            $exception = $this->exception->getPrevious();
+            if ($exception) {
+        ?>
+            <h2>Previous exceptions:</h2>
+            <?php
+                while ($exception) {
+            ?>
+                <table>
+                    <tr>
+                        <th>Class:</th>
+                        <td><?= get_class($exception) ?></td>
+                    </tr>
+                    <tr>
+                        <th>File:</th>
+                        <td><?= $exception->getFile() ?>:<?= $exception->getLine() ?></td>
+                    </tr>
+                    <tr>
+                        <th>Message:</th>
+                        <td><?= $exception->getMessage() ?></td>
+                    </tr>
+                    <tr>
+                        <th>Stack trace:</th>
+                        <td><pre><?= $exception->getTraceAsString() ?></pre></td>
+                    </tr>
+                </table>
+            <?php
+                    $exception = $exception->getPrevious();
+                }
+            ?>
+        <?php } ?>
+    <?php } else { ?>
+        <p>No Exception available</p>
+    <?php } ?>
+<?php } ?>
